@@ -11,6 +11,17 @@ with open('input.txt', 'r') as file:
 
 column1_sorted = sorted(column1)
 column2_sorted = sorted(column2)
-differences = [abs(a - b) for a, b in zip(column1_sorted, column2_sorted)]
 
-print("Total difference:", sum(differences))
+# Puzzle 1
+differences = [abs(a - b) for a, b in zip(column1_sorted, column2_sorted)]
+print("Puzzle 1: Total difference:", sum(differences))
+
+# Puzzle 2
+score = 0
+for item, value in enumerate(column1_sorted):
+    occurrence = column2_sorted.count(value)
+    score = score + occurrence*value
+print("Puzzle 2: Total similarity score:", score)
+
+
+
