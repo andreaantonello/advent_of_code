@@ -22,6 +22,3 @@ for item, value in enumerate(column1_sorted):
     occurrence = column2_sorted.count(value)
     score = score + occurrence*value
 print("Puzzle 2: Total similarity score:", score)
-
-
-
