@@ -7,15 +7,7 @@ import time
 with open("input.txt", "r") as file:
     input_string = file.read()
 
-
 def process_file(file_path):
-    """
-    Processes a text file to extract pairs and grouped lists.
-
-    :param file_path: Path to the input file.
-    :param target_pairs: Set of target pairs in "A|B" format.
-    :return: Tuple of separated pairs and grouped lists.
-    """
     with open(file_path, "r") as file:
         lines = file.read().strip().split("\n")
 
@@ -26,19 +18,25 @@ def process_file(file_path):
     # Process pairs
     separated_pairs = [
         [int(x) for x in pair.split("|")]
-        for pair in pairs
-    ]
+        for pair in pairs]
 
     # Process grouped lists
     grouped_lists = [
         [int(x) for x in group.split(",")]
-        for group in grouped
-    ]
-
+        for group in grouped]
     return separated_pairs, grouped_lists
 
 
+def find_mid_value(list):
+    n = len(list)
+    if n == 0:
+        raise ValueError("The list is empty. Cannot find the middle element.")
 
+    mid = n // 2
+    if n % 2 == 0:
+        # Even length: Return two middle elements
+        raise ValueError("The list has even length")
+    return list[mid]
 
 def page_ordering(rules):
     # Step 1: Parse rules into a graph
@@ -74,14 +72,13 @@ def page_ordering(rules):
         raise ValueError("The rules contain a cycle and cannot be resolved.")
 
 
-
-
+# Part 1
 file_path = "input.txt"
 separated_pairs, grouped_lists = process_file(file_path)
 
 correct_list = []
+mid_value = []
 for index, list in enumerate(grouped_lists):
-    # print(f'Analysing list {index}')
     validity = True
     for rule in separated_pairs:
         if rule[0] in list and rule[1] in list:
@@ -90,83 +87,47 @@ for index, list in enumerate(grouped_lists):
                 break
     if validity:
         correct_list.append(list)
-
-mid_value = []
-for list in correct_list:
-    n = len(list)
-    if n == 0:
-        raise ValueError("The list is empty. Cannot find the middle element.")
-
-    mid = n // 2
-    if n % 2 == 0:
-        # Even length: Return two middle elements
-        raise ValueError("The list has even length")
-    else:
-        mid_value.append(list[mid])
+        mid_value.append(find_mid_value(list))
 
 result = sum(mid_value)
-print(f'Quiz result is {result}')
-
+print(f'Quiz 1 result is {result}')
 
 # Part 2
-
-correct_list = []
-index_list = []
-grouped_list_fixed = []
-for list_index, grouped_list in enumerate(grouped_lists):
-    print(f'Analysing list {list_index}')
-    restart = False
-    separated_index = 0  # Index for iterating through separated_pairs
-
-    while separated_index < len(separated_pairs):
-        if restart:
-            separated_index = 0
-            restart = False
-
-        rule = separated_pairs[separated_index]
-        if rule[0] in grouped_list and rule[1] in grouped_list:
-            if grouped_list.index(rule[0]) > grouped_list.index(rule[1]):
-                # Swap the items to ensure rule[0] comes before rule[1]
-                rule_0_index = grouped_list.index(rule[0])
-                rule_1_index = grouped_list.index(rule[1])
-                grouped_list[rule_0_index], grouped_list[rule_1_index] = grouped_list[rule_1_index], grouped_list[
-                    rule_0_index]
-                restart = True
-                if separated_index not in index_list:
-                    index_list.append(separated_index)
-
-        if not restart:  # Only increment if no restart
-            separated_index += 1
-
-    # Add the corrected list to grouped_list_fixed
-    grouped_list_fixed.append(grouped_list)
-
-
-print(f'len of list is {len(grouped_lists)}')
-print(f'len of list is {len(grouped_list_fixed)}')
-
-
-for index, grouped_list in enumerate(grouped_list_fixed):
-    print(f'Analysing list {index}')
+wrong_list = []
+mid_value = []
+for index, list in enumerate(grouped_lists):
     validity = True
     for rule in separated_pairs:
-        if rule[0] in grouped_list and rule[1] in grouped_list:
-            if grouped_list.index(rule[0]) > grouped_list.index(rule[1]):
-                print('We have an error!')
+        if rule[0] in list and rule[1] in list:
+            if list.index(rule[0]) > list.index(rule[1]):
+                validity = False
+                break
+    if not validity:
+        wrong_list.append(list)
+
+continue_looping = True
+loop = 0
+while continue_looping:
+    wrong_items = 0
+    print(f'Starting loop {loop + 1}')
+    for index, list in enumerate(wrong_list):
+        for rule in separated_pairs:
+            if rule[0] in list and rule[1] in list:
+                if list.index(rule[0]) > list.index(rule[1]):
+                    wrong_items += 1
+                    rule_0_index = list.index(rule[0])
+                    rule_1_index = list.index(rule[1])
+                    list[rule_0_index], list[rule_1_index] = list[rule_1_index], list[
+                        rule_0_index]
+    if wrong_items == 0:
+        continue_looping = False
+    print(f'Incorrectly places items are {wrong_items}')
+    loop += 1
 
 mid_value = []
-for list in grouped_list_fixed:
-    n = len(list)
-    if n == 0:
-        raise ValueError("The list is empty. Cannot find the middle element.")
-
-    mid = n // 2
-    if n % 2 == 0:
-        # Even length: Return two middle elements
-        raise ValueError("The list has even length")
-    else:
-        mid_value.append(list[mid])
+for index, list in enumerate(wrong_list):
+    mid_value.append(find_mid_value(list))
 
 result = sum(mid_value)
-print(f'Quiz result is {result}')
+print(f'Quiz 2 result is {result}')
 
