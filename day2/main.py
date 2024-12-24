@@ -25,15 +25,12 @@ class ReportAnalysis:
         # print("Difference:", self.difference)
 
     def isIncreasing(self):
-        # Check if all differences are positive (i.e., the list is increasing)
         for diff in self.difference:
             if diff <= 0:
                 return False
-        # print("Line is increasing")
         return True
 
     def isDecreasing(self):
-        # Check if all differences are positive (i.e., the list is increasing)
         for diff in self.difference:
             if diff >= 0:
                 return False
