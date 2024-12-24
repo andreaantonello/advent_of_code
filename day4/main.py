@@ -1,89 +1,82 @@
-import re
+import sys
 
-# Example input string (replace this with your file content)
-with open("input.txt", "r") as file:
-    input_string = file.read()
+def read_input_from_file(filename):
+    """Read the word search matrix from a file."""
+    with open(filename, 'r') as file:
+        # Read lines from the file and strip newlines
+        matrix = [line.strip() for line in file.readlines()]
+    return matrix
 
-def mirror_matrix(matrix):
-    # Reverse each row in the matrix
-    mirrored = [row[::-1] for row in matrix]
-    return mirrored
+def check_word_match(matrix, direction, startPoint):
+    matrix_size = [len(matrix) - 1, len(matrix[0]) - 1]
+    # check if word is too big
+    word = "XMAS"
+    row_end = startPoint[0] + (len(word) - 1)*direction[0]
+    col_end = startPoint[1] + (len(word) - 1)*direction[1]
+    if not (0 <= row_end <= matrix_size[0] and 0 <= col_end <= matrix_size[1]):
+        return False
 
-def transpose_matrix(matrix):
-    # Use zip to transpose the matrix
-    transposed = list(zip(*matrix))
-    # Convert each tuple into a string
-    transposed = [''.join(row) for row in transposed]
-    return transposed
+    for index, char in enumerate(word):
+        new_point = [startPoint[0] + index*direction[0], startPoint[1] + index*direction[1]]
+        if matrix[new_point[0]][new_point[1]] is not char:
+            return False
+    return True
 
-def count_horizontal_matches(matrix, word):
-    rows = matrix.splitlines()
-    row_count = 0
-    for row in rows:
-        row_count = row_count + row.upper().count(word)
-    return row_count
+def check_tree_match(matrix, startPoint):
+    matrix_size = [len(matrix) - 1, len(matrix[0]) - 1]
+    # check if word is too big
 
-def count_matches(matrix, word):
-    """Count the horizontal, vertical, diagonal, and backward matches in the matrix."""
-    word_len = len(word)
-    rows = len(matrix)
-    cols = len(matrix[0])
-    match_count = 0
-
-    # Horizontal matches (left to right)
-    for r in range(rows):
-        for c in range(cols - word_len + 1):
-            if matrix[r][c:c+word_len] == word:
-                match_count += 1
-
-    # Horizontal matches (right to left)
-    for r in range(rows):
-        for c in range(word_len - 1, cols):
-            if matrix[r][c:c-word_len:-1] == word:
-                match_count += 1
-
-    # Vertical matches (downwards)
-    for c in range(cols):
-        for r in range(rows - word_len + 1):
-            if ''.join(matrix[r+i][c] for i in range(word_len)) == word:
-                match_count += 1
-
-    # Vertical matches (upwards)
-    for c in range(cols):
-        for r in range(word_len - 1, rows):
-            if ''.join(matrix[r-i][c] for i in range(word_len)) == word:
-                match_count += 1
-
-    # Diagonal matches (top-left to bottom-right)
-    for r in range(rows - word_len + 1):
-        for c in range(cols - word_len + 1):
-            if ''.join(matrix[r+i][c+i] for i in range(word_len)) == word:
-                match_count += 1
-
-    # Diagonal matches (bottom-left to top-right)
-    for r in range(word_len - 1, rows):
-        for c in range(cols - word_len + 1):
-            if ''.join(matrix[r-i][c+i] for i in range(word_len)) == word:
-                match_count += 1
-
-    # Diagonal matches (top-right to bottom-left)
-    for r in range(rows - word_len + 1):
-        for c in range(word_len - 1, cols):
-            if ''.join(matrix[r+i][c-i] for i in range(word_len)) == word:
-                match_count += 1
-
-    # Diagonal matches (bottom-right to top-left)
-    for r in range(word_len - 1, rows):
-        for c in range(word_len - 1, cols):
-            if ''.join(matrix[r-i][c-i] for i in range(word_len)) == word:
-                match_count += 1
-
-    return match_count
+    if not (startPoint[0] - 1 >= 0 and startPoint[0] + 1 <= matrix_size[0]
+        and startPoint[1] - 1 >= 0 and startPoint[1] + 1 <= matrix_size[1]):
+        return False
+    # Check upper diagonal
+    up_left = [startPoint[0] - 1, startPoint[1] - 1]
+    up_right = [startPoint[0] + 1, startPoint[1] - 1]
+    down_left = [startPoint[0] - 1, startPoint[1] + 1]
+    down_right = [startPoint[0] + 1, startPoint[1] + 1]
+    if ((matrix[up_left[0]][up_left[1]] == 'M' and matrix[down_right[0]][down_right[1]] == 'S') or
+            (matrix[up_left[0]][up_left[1]] == 'S' and matrix[down_right[0]][down_right[1]] == 'M')):
+        if ((matrix[up_right[0]][up_right[1]] == 'M' and matrix[down_left[0]][down_left[1]] == 'S') or
+                (matrix[up_right[0]][up_right[1]] == 'S' and matrix[down_left[0]][down_left[1]] == 'M')):
+            return True
 
 
+
+# Solution to quiz 1
+directions = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, -1], [-1, 1]]
+# Word to search for
 word = "XMAS"
-result = count_horizontal_matches(input_string, word)
 
-print(mirror_matrix(word))
+# Read the word search matrix from the file
+matrix = read_input_from_file("input1.txt")
+matrix_size = [len(matrix), len(matrix[0])]
 
-print(f"Found '{word}' {result} times.")
+word_count = 0
+for row_index, row in enumerate(matrix):
+    for col_index, col in enumerate(matrix):
+        if matrix[row_index][col_index] == 'X':
+            for direction in directions:
+                startPoint = [row_index, col_index]
+                match = check_word_match(matrix, direction, startPoint)
+                if match:
+                    word_count += 1
+
+# Print the matches
+print(f"Found '{word}' {word_count} times.")
+
+# Solution to quiz 2
+
+# Read the word search matrix from the file
+matrix = read_input_from_file("input2.txt")
+matrix_size = [len(matrix), len(matrix[0])]
+word_count = 0
+for row_index, row in enumerate(matrix):
+    for col_index, col in enumerate(matrix):
+        if matrix[row_index][col_index] == 'A':
+            startPoint = [row_index, col_index]
+            match = check_tree_match(matrix, startPoint)
+            if match:
+                word_count += 1
+
+# Print the matches
+print(f"Found '{word}' {word_count} times.")
