@@ -1,9 +1,11 @@
-
+import re
+from collections import defaultdict, deque
+import sys
+import time
 
 def import_input_file(filename):
     with open(filename, "r") as file:
-        grids = file.read().strip().split("\n\n")  # Split grids by double newlines
-
+        grids = file.read().strip().split("\n\n")
     return grids
 
 def count_hash_from_file(grids):
@@ -12,8 +14,7 @@ def count_hash_from_file(grids):
     for grid in grids:
         rows = grid.split("\n")
         column_count = len(rows[0])
-        counts = [-1] * column_count  # Initialize a count array for each column
-
+        counts = [-1] * column_count
         for row in rows:
             for col_index, char in enumerate(row):
                 if char == "#":
@@ -25,7 +26,6 @@ def count_hash_from_file(grids):
             locks.append(counts)
     return keys, locks
 
-# File name (replace with your actual file path)
 filename = "input.txt"
 
 # Get the counts

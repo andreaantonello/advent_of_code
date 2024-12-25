@@ -1,3 +1,8 @@
+import re
+from collections import defaultdict, deque
+import sys
+import time
+
 def mix_and_prune(secret_number, value_to_mix):
     secret_number ^= value_to_mix
     secret_number %= 16777216

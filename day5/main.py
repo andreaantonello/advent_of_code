@@ -60,7 +60,6 @@ def page_ordering(rules):
     else:
         raise ValueError("The rules contain a cycle and cannot be resolved.")
 
-
 # Part 1
 file_path = "input.txt"
 separated_pairs, grouped_lists = process_file(file_path)

@@ -16,7 +16,6 @@ def clear_terminal():
     else:
         os.system('clear')
 
-
 def overwriteLines(lines, row_index, col_index, target):
     row = list(lines[row_index])
     row[col_index] = target
@@ -78,11 +77,10 @@ while True:
 seen = set()
 unique_list_ordered = []
 for lst in locationsVisited:
-    tup = tuple(lst)  # Convert list to tuple for hashing
+    tup = tuple(lst)
     if tup not in seen:
         unique_list_ordered.append(lst)
         seen.add(tup)
 
-# Print the result
 print(unique_list_ordered)
 print(f'Unique places visited are {len(unique_list_ordered)}')

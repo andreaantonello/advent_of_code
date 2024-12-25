@@ -99,7 +99,6 @@ def solve(grid):
     num_rows, num_cols = len(grid), len(grid[0])
     visited = [[False] * num_cols for _ in range(num_rows)]
 
-    # Use BFS to fill regions
     def walk_region(r, c):
         new_grid = [['.'] * num_cols for _ in range(num_rows)]
         queue = []
@@ -123,16 +122,11 @@ def solve(grid):
                     row_ids.add(nr)
                     col_ids.add(nc)
 
-        # Crop grid to save memory
         min_r, max_r = min(row_ids), max(row_ids)
         min_c, max_c = min(col_ids), max(col_ids)
         cropped_grid = []
         for r in range(min_r, max_r+1):
             cropped_grid.append(new_grid[r][min_c:max_c+1])
-
-        # print("=== Region ===")
-        # for r in cropped_grid:
-        #     print(f"\t{''.join(r)}")
 
         # Calculate fence prices
         fence_price = calculate_fence_price(cropped_grid)
@@ -143,7 +137,6 @@ def solve(grid):
     regular_price = 0
     bulk_price = 0
 
-    # Walk the board looking for cells we haven't visited yet
     for r in range(num_rows):
         for c in range(num_cols):
             if visited[r][c]:

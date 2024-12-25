@@ -8,9 +8,7 @@ DIRECTION_MAP = {
     '<': (0, -1),
 }
 
-
 def read_input(filename):
-    """ read_input returns a grid as a list of strings, and steps as a string """
     with open(filename, 'r') as file:
         grid = []
         steps = []
@@ -22,18 +20,14 @@ def read_input(filename):
             steps.append(line.strip())
     return grid, ''.join(steps)
 
-
 def analyze_grid_str(grid_str):
-    """ analyze_grid returns a list of character lists, and starting position"""
     start_pos = None
     for r, row in enumerate(grid_str):
         c = row.find('@')
         if c != -1:
             start_pos = (r, c)
             break
-
     return [list(row) for row in grid_str], start_pos
-
 
 def expand_grid_str(grid_str):
     new_grid = []
@@ -46,7 +40,6 @@ def expand_grid_str(grid_str):
         new_grid.append(line)
     return new_grid
 
-
 def calculate_gps_sum(grid):
     total = 0
     for r, row in enumerate(grid):
@@ -55,7 +48,6 @@ def calculate_gps_sum(grid):
                 total += (100 * r) + c
     return total
 
-
 def part1(grid_str, steps):
     grid, start_pos = analyze_grid_str(grid_str)
     r, c = start_pos
@@ -63,18 +55,13 @@ def part1(grid_str, steps):
         d = DIRECTION_MAP[step]
         nr, nc = r + d[0], c + d[1]
 
-        # Immediately blocked, no movement
         if grid[nr][nc] == '#':
             continue
-
-        # Simple slide to adjacent free space
         if grid[nr][nc] == '.':
             grid[r][c] = '.'
             grid[nr][nc] = '@'
             r, c = nr, nc
             continue
-
-        # Scan in direction until we hit "." or "#"
         peek_r, peek_c = nr + d[0], nc + d[1]
         while grid[peek_r][peek_c] != '.' and grid[peek_r][peek_c] != '#':
             peek_r, peek_c = peek_r + d[0], peek_c + d[1]
@@ -84,12 +71,10 @@ def part1(grid_str, steps):
             grid[r][c] = '.'
             grid[nr][nc] = '@'
             r, c = nr, nc
-
     return calculate_gps_sum(grid)
 
 
 def part2(grid_str, steps):
-
     expanded_grid_str = expand_grid_str(grid_str)
     grid, start_pos = analyze_grid_str(expanded_grid_str)
 
@@ -112,34 +97,20 @@ def part2(grid_str, steps):
         # Special cases
         ##################
 
-        # Case 1: Push box(es) left/right
         if d[1] != 0:
             peek_c = nc
-
-            # Peek until we see a blank space or a wall
             while grid[r][peek_c] != '.' and grid[r][peek_c] != '#':
                 peek_c += d[1]
-
-            # Boxes are flush against a wall, no movement
             if grid[r][peek_c] == '#':
                 continue
-
-            # If we hit an open space, shift the previous cells 1 unit over
             shift_c = peek_c
             while shift_c != c - d[1]:
                 grid[r][shift_c] = grid[r][shift_c - d[1]]
                 shift_c -= d[1]
             grid[r][c] = '.'
             c = nc
-
-        # Case 2: Vertically shift boxes
         else:
-
             def get_shift_chain():
-                """
-                    This returns a dictionary of pieces that are valid to shift
-                    otherwise None
-                """
                 queue = []
                 queue.append((r, c))
                 visited = {}
@@ -177,9 +148,7 @@ def part2(grid_str, steps):
                 grid[r][c] = '.'
                 grid[nr][c] = '@'
                 r, c = nr, nc
-
     return calculate_gps_sum(grid)
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("main.py")

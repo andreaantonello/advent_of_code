@@ -58,7 +58,6 @@ def find_cheats(grid, start, end):
                 if cheat_time < normal_path:
                     saves_time = normal_path - cheat_time
                     cheats.append(saves_time)
-
     cheat_counts = Counter(cheats)
 
     results = []

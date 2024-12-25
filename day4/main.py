@@ -3,7 +3,6 @@ from collections import defaultdict, deque
 import sys
 import time
 
-
 def read_input_from_file(filename):
     """Read the word search matrix from a file."""
     with open(filename, 'r') as file:

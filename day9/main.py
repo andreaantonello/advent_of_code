@@ -1,26 +1,26 @@
+import re
+from collections import defaultdict, deque
+import sys
 import time
 
 def read_line_from_file(filename):
     with open(filename, 'r') as file:
-        # Read the single line and strip any surrounding whitespace or newline characters
         line = file.readline().strip()
     return line
-
 
 def separate_odd_even_positions(elements):
     odd_position_string = []
     even_position_string = []
 
     for i, element in enumerate(elements):
-        if i % 2 == 0:  # Even index (0-based), which is odd position (1-based)
+        if i % 2 == 0:
             odd_position_string.append(element)
-        else:  # Odd index (0-based), which is even position (1-based)
+        else:
             even_position_string.append(element)
 
     return odd_position_string, even_position_string
 
-# Example usage
-filename = 'input.txt'  # Replace with your file path
+filename = 'input.txt'
 line = read_line_from_file(filename)
 
 disk_string = []
