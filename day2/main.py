@@ -1,16 +1,16 @@
-# Initialize an empty matrix
+import re
+from collections import defaultdict, deque
+import sys
+import time
+
 matrix = []
 
-# Open the file and read each line
 with open('input.txt', 'r') as file:
     for line in file:
-        # Split the line into a list of integers
         row = list(map(int, line.split()))
-        # Append the row to the matrix
         matrix.append(row)
 
 def check_range(list, lower_bound, upper_bound):
-    # Check if all elements are within the range [lower_bound, upper_bound]
     return all(lower_bound <= abs(x) <= upper_bound for x in list)
 
 class ReportAnalysis:
@@ -20,7 +20,6 @@ class ReportAnalysis:
         self.diffRange = diffRange
 
     def processLine(self, reportLine):
-        # Set reportLine and calculate the difference between consecutive elements
         self.difference = [reportLine[i + 1] - reportLine[i] for i in range(len(reportLine) - 1)]
         # print("Difference:", self.difference)
 
@@ -34,7 +33,6 @@ class ReportAnalysis:
         for diff in self.difference:
             if diff >= 0:
                 return False
-        # print("Line is decreasing")
         return True
 
     def checkValidity(self, reportLine):

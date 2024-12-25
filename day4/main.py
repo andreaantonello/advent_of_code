@@ -1,9 +1,12 @@
+import re
+from collections import defaultdict, deque
 import sys
+import time
+
 
 def read_input_from_file(filename):
     """Read the word search matrix from a file."""
     with open(filename, 'r') as file:
-        # Read lines from the file and strip newlines
         matrix = [line.strip() for line in file.readlines()]
     return matrix
 
@@ -40,14 +43,9 @@ def check_tree_match(matrix, startPoint):
                 (matrix[up_right[0]][up_right[1]] == 'S' and matrix[down_left[0]][down_left[1]] == 'M')):
             return True
 
-
-
-# Solution to quiz 1
 directions = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, -1], [-1, 1]]
-# Word to search for
 word = "XMAS"
 
-# Read the word search matrix from the file
 matrix = read_input_from_file("input1.txt")
 matrix_size = [len(matrix), len(matrix[0])]
 
@@ -61,12 +59,9 @@ for row_index, row in enumerate(matrix):
                 if match:
                     word_count += 1
 
-# Print the matches
 print(f"Found '{word}' {word_count} times.")
 
 # Solution to quiz 2
-
-# Read the word search matrix from the file
 matrix = read_input_from_file("input2.txt")
 matrix_size = [len(matrix), len(matrix[0])]
 word_count = 0
@@ -78,5 +73,4 @@ for row_index, row in enumerate(matrix):
             if match:
                 word_count += 1
 
-# Print the matches
 print(f"Found '{word}' {word_count} times.")

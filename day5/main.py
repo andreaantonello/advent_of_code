@@ -3,24 +3,19 @@ from collections import defaultdict, deque
 import sys
 import time
 
-# Example input string (replace this with your file content)
 with open("input.txt", "r") as file:
     input_string = file.read()
 
 def process_file(file_path):
     with open(file_path, "r") as file:
         lines = file.read().strip().split("\n")
-
-    # Separate lines based on presence of '|'
     pairs = [line.strip() for line in lines if "|" in line]
     grouped = [line.strip() for line in lines if "|" not in line and line.strip()]
 
-    # Process pairs
     separated_pairs = [
         [int(x) for x in pair.split("|")]
         for pair in pairs]
 
-    # Process grouped lists
     grouped_lists = [
         [int(x) for x in group.split(",")]
         for group in grouped]
@@ -31,7 +26,6 @@ def find_mid_value(list):
     n = len(list)
     if n == 0:
         raise ValueError("The list is empty. Cannot find the middle element.")
-
     mid = n // 2
     if n % 2 == 0:
         # Even length: Return two middle elements
@@ -39,11 +33,9 @@ def find_mid_value(list):
     return list[mid]
 
 def page_ordering(rules):
-    # Step 1: Parse rules into a graph
-    graph = defaultdict(list)  # Adjacency list
-    in_degree = defaultdict(int)  # Count of incoming edges for each node
+    graph = defaultdict(list)
+    in_degree = defaultdict(int)
 
-    # Build the graph and count in-degrees
     for rule in rules:
         before, after = map(int, rule.split('|'))
         graph[before].append(after)
@@ -51,8 +43,6 @@ def page_ordering(rules):
         if before not in in_degree:
             in_degree[before] = 0
 
-    # Step 2: Perform topological sort
-    # Find all nodes with no incoming edges
     queue = deque([node for node in in_degree if in_degree[node] == 0])
     ordering = []
 
@@ -65,7 +55,6 @@ def page_ordering(rules):
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
 
-    # If we sorted all nodes, return the ordering
     if len(ordering) == len(in_degree):
         return ordering
     else:
@@ -130,4 +119,3 @@ for index, list in enumerate(wrong_list):
 
 result = sum(mid_value)
 print(f'Quiz 2 result is {result}')
-
